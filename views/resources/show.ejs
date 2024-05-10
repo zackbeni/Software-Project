@@ -1,48 +1,26 @@
-<% layout('./layouts/boilerplate') %>
-    <h1 style='text-align: center'>Welcome to a single resource page</h1>
-    <div class="row">
-        <div class='col-6' offset-7>
-            <h2 class='card-title'>
-                <%= resource.title %>
-            </h2>
-            <p>
-                <%= resource.description %>
-            </p>
-            <img src="<%=resource.image%>" alt="image">
-            <a href="<%= resource.url%>">Click here to visit website</a>
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card mb-3">
+            <img src="<%= resource.image%>" class="card-img-top" alt="..." style="width: 18rem">
+            <div class="card-body">
+                <h5 class="card-title"><%= resource.title%></h5>
+                <p class="card-text"><%= resource.description%></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item text-muted">Category: <%= resource.category%></li>
+                <li class="list-group-item">Subject: <%= resource.subject%></li>
+            </ul>
+            <div class="card-body">
+                <a class="card-link btn btn-info" href="/resources/<%=resource._id%>/edit">Edit</a>
+                <form class="d-inline" action="/resources/<%=resource._id%>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+                <a class="card-link btn btn-info" href="/categories/<%= resource.category%>">Back to <%= resource.category%> Category</a>
+            </div>
+            <div class="card-footer text-muted">
+                <a href="<%= resource.url%>">Click to visit resoure website</a>
+            </div>
         </div>
-        <a href="/resources/<%= resource._id %>/edit">Edit</a>
     </div>
-    <a href="/categories/<%= resource.category %>">Back to <%= resource.category %> Category</a>
-    <br>
-
-<div class="col-6">
-    <canvas id="myChart"></canvas>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    const ctx = document.getElementById('myChart');
-
-    new Chart(ctx, {
-        type: 'bar',
-        backgroundColor: 'red',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green'],
-            datasets: [{
-                label: 'Number of Resources under Each Category',
-                backgroundColor: 'rgb(200,100,0)',
-                data: [12, 19, 3, 2],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>

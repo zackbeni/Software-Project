@@ -3,22 +3,53 @@
 <div class="row">
     <h1 class="text-center">Edit a Resource</h1>
     <div class="col-6 offset-3">
-        <form action="/resources/<%=resource._id%>?_method=PUT" method="POST">
+        <form action="/resources/<%=resource._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+            
+            <div class="mb-3">
+                <label class="form-label" for="source">Source</label>
+                <select class="form-control" name="resource[source]" id="source">
+                    <% for (let s of sources) {%>
+                        <option value="<%= s %>"><%= s %></option>
+                    <% } %>
+                </select>
+            </div>
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="resource[title]"
-                    value="<%=resource.title %>">
+                    value="<%=resource.title %>" required>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="image">Url</label>
+                <label class="form-label" for="image">Website Url</label>
                 <input class="form-control" type="text" id="url" name="resource[url]"
                     value="<%=resource.url %>">
             </div>
             <div class="mb-3">
+                <label class="form-label" for="image">Image Url</label>
+                <input class="form-control" type="text" id="image" name="resource[image]"
+                    value="<%=resource.image %>" required>
+            </div>
+            <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control" type="text" id="description"
-                    name="resource[description]"><%= resource.description%></textarea>
+                    name="resource[description]" required><%= resource.description%></textarea>
             </div>
+            <div class="mb-3">
+                <label class="form-label" for="subject">Subject</label>
+                <select class="form-control" name="resource[subject]" id="subject">
+                    <% for (let s of subjects) {%>
+                        <option value="<%= s %>"><%= s %></option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="category">Category</label>
+                <select class="form-control" name="resource[category]" id="category">
+                    <% for (let c of categories) {%>
+                        <option value="<%= c %>"><%= c %></option>
+                    <% } %>
+                </select>
+            </div>
+            
             <div class="mb-3">
                 <button class="btn btn-info">Update resource</button>
             </div>
@@ -32,3 +63,25 @@
 
     </div>
 </div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+(() => {
+    'use strict'
+  
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    const forms = document.querySelectorAll('.validated-form')
+  
+    // Loop over them and prevent submission
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+  
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>
