@@ -1,0 +1,49 @@
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <h1 class="text-center">New resources</h1>
+    <div class="col-6 offset-3">
+        <form action="/resources" method="POST">
+            <div class="mb-3">
+                <label class="form-label" for="source">Source</label>
+                <select class="form-control" name="resource[source]" id="source">
+                    <% for (let s of sources) {%>
+                        <option value="<%= s %>"><%= s %></option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control" type="text" id="title" name="resource[title]" >
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="image">Url</label>
+                <input class="form-control" type="text" id="url" name="resource[url]">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="resource[description]"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="subject">Subject</label>
+                <select class="form-control" name="resource[subject]" id="subject">
+                    <% for (let s of subjects) {%>
+                        <option value="<%= s %>"><%= s %></option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="category">Category</label>
+                <select class="form-control" name="resource[category]" id="category">
+                    <% for (let c of categories) {%>
+                        <option value="<%= c %>"><%= c %></option>
+                    <% } %>
+                </select>
+            </div>
+           
+            <div class="mb-3">
+                <button class="btn btn-success">Add Resource</button>
+            </div>
+        </form>
+        <a href="/resources">All resources</a>
+    </div>
+</div>

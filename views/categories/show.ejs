@@ -1,0 +1,10 @@
+<% layout('./layouts/boilerplate') %>
+<h1 style='text-align: center'>Welcome to a single Category page</h1>
+<% for (r of resources) {%>
+    <ul>
+        <li>
+            <a href="/resources/<%= r._id%>"><%= r.source %></a>
+        </li>
+    </ul>
+
+<% } %>

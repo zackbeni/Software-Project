@@ -1,0 +1,8 @@
+<% layout('./layouts/boilerplate') %>
+<h1 style="text-align: center">Welcome to the All Categories page</h1>
+<% for (c of categories) {%>
+    <ol>
+        <a href="/categories/<%= c %>"><%= c %></a>
+    </ol>
+
+<% } %>

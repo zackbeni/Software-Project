@@ -1,0 +1,15 @@
+<% layout('./layouts/boilerplate') %>
+<h1 style="text-align: center">Welcome to the All Resources page</h1>
+<% for (let r of resources) {%>
+    <div>
+        <h2>
+            <a href="/resources/<%= r._id %>"><%= r.title %></a>
+            
+        </h2>
+        <p>
+            <%= r.description %>
+        </p>
+        <img src="<%=r.image%>" alt="image">
+        <a href="<%= r.url%>">Click here to visit website</a>
+    </div>
+    <% } %>
