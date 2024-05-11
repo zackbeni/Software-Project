@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-6 offset-3">
         <div class="card mb-3">
-            <img src="<%= resource.image%>" class="card-img-top" alt="..." style="width: 18rem">
+            <img src="<%= resource.image%>" class="card-img-top" alt="..." style="width: 30%;  display: block; margin-left: auto; margin-right: auto;">
             <div class="card-body">
                 <h5 class="card-title"><%= resource.title%></h5>
                 <p class="card-text"><%= resource.description%></p>
@@ -19,7 +19,7 @@
                 <a class="card-link btn btn-info" href="/categories/<%= resource.category%>">Back to <%= resource.category%> Category</a>
             </div>
             <div class="card-footer text-muted">
-                <a href="<%= resource.url%>">Click to visit resoure website</a>
+                <a href="<%= resource.url%>" target="_blank">Click to visit resoure website</a>
             </div>
         </div>
     </div>

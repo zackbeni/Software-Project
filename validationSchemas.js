@@ -5,6 +5,8 @@ module.exports.resourceSchema = joi.object({
         title: joi.string().required(),
         url: joi.string().required(),
         image: joi.string().required(),
-        description: joi.string().required()
+        description: joi.string().required(),
+        subject: joi.string().required(),
+        category: joi.string().required()
     }).required()
 })

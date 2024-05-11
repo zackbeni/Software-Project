@@ -20,12 +20,12 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static('public'))
 
 mongoose.connect('mongodb://127.0.0.1:27017/project-test')
 
 const validateResource = (req, res, next) =>{
     const { error } = resourceSchema.validate(req.body)
-    console.log(error.message)
     if(error){
         throw new ExpressError(error.message,400)
     }else{
@@ -61,9 +61,8 @@ app.post('/resources', validateResource, catchAsync(async (req, res) => {
 app.get('/resources/:id', catchAsync(async (req, res, next) => {
     const { id }= req.params
     const resource = await Resource.findById(id)
-    console.log('I am running')
     res.render('../views/resources/show', { resource })
-    
+
 }))
 
 //edit a specific resource
@@ -92,15 +91,21 @@ app.delete('/resources/:id', async (req, res) => {
 app.get('/subjects', async(req, res) => {
     const resources = await Resource.find()
     const subjects = new Set()
+    const counts = new Map()
     for(let r of resources ){
         subjects.add(r.subject)
     }
-    res.render('../views/subjects/index', { subjects })
+    for(let s of subjects){
+        const count = await Resource.countDocuments({subject: s})
+        counts.set(s, count)
+    }
+    res.render('../views/subjects/index', { subjects, counts })
 })
 //show a subject
 app.get('/subjects/:id', catchAsync(async (req, res,next) => {
     const { id } = req.params
-    const resources = await Resource.find({subject: id}, 'category')
+    const sub = {subject: id}
+    const resources = await Resource.find({subject: id})
     if(resources.length == 0){
         next(new ExpressError(`Subject "${id}" was not found`,404))
     }
@@ -108,24 +113,29 @@ app.get('/subjects/:id', catchAsync(async (req, res,next) => {
     for (let r of resources){
         categories.add(r.category)
     }
-    res.render('../views/subjects/show', { categories })
+    res.render('../views/subjects/show', { categories, sub, resources })
 }))
 //show all categories
 app.get('/categories', async(req, res) => {
     const resources = await Resource.find({}, 'category')
     const categories = new Set()
-    for(let r of resources ){
+    const counts = new Map()
+    for(let r of resources){
         categories.add(r.category)
     }
-
-    res.render('../views/categories/index', { categories })
+    for(let c of categories){
+        const count = await Resource.countDocuments({category: c})
+        counts.set(c, count)
+    }
+    res.render('../views/categories/index', { categories, counts })
 })
 
 //show a single category
 app.get('/categories/:id', async(req, res) => {
     const { id } = req.params
+    const cat =  {category: id}
     const resources = await Resource.find({category: id})
-    res.render('../views/categories/show', { resources })
+    res.render('../views/categories/show', { resources, cat })
 })
 
 app.all('*', (req, res, next) =>{
