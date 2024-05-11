@@ -1,6 +1,7 @@
 const { required } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Review = require('./review')
 const resourceSchema = new Schema({
     source: String,
     title: {
@@ -12,11 +13,25 @@ const resourceSchema = new Schema({
     image: String,
     subject: String,
     category: String,
-    reviews: {
-        type: Schema.Types.ObjectId,
-        ref: 'Review'
-    }
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 });
+
+resourceSchema.post('findOneAndDelete', async function (doc) {
+    console.log(doc)
+    if (doc) {
+        await Review.deleteMany({
+            _id: {
+                $in: doc.reviews
+            }
+        })
+    }
+})
+
 module.exports = mongoose.model('Resource', resourceSchema);
 
 
@@ -36,6 +51,6 @@ module.exports = mongoose.model('Resource', resourceSchema);
 //     }
 // }
 //  const t = {
-//     categories: 
+//     categories:
 
 //  }

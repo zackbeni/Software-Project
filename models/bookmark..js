@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const bookmarkSchema = new Schema({
 
     //this will just tick to true or false once bookmarked button is clicked. Once a bookmark record is saved, it shouldn'tbe deleted. Ony the boolean field should be changed.
-    bookmarked: Boolean,
+    isBookmarked: Boolean,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -11,8 +11,7 @@ const bookmarkSchema = new Schema({
     resource: {
         type: Schema.Types.ObjectId,
         ref: 'Resource'
-    },
-    isBookmarked: Boolean
+    }   
 
 });
 

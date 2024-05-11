@@ -2,12 +2,14 @@ const express = require('express');
 const ejsMate = require('ejs-mate');
 const path = require('path');
 const app = express();
-const { resourceSchema } = require('./validationSchemas.js')
+const { resourceSchema, reviewSchema } = require('./validationSchemas.js')
 const methodOverride = require('method-override')
 const mongoose = require('mongoose');
 const Resource = require('./models/resource');
+const Review = require('./models/review')
 const ExpressError = require('./utils/ExpressError')
-const catchAsync = require('./utils/catchAsync')
+const catchAsync = require('./utils/catchAsync');
+const review = require('./models/review');
 
 
 const subjects =  ['Programming Languages', 'Databases', 'Web Technologies']
@@ -26,6 +28,14 @@ mongoose.connect('mongodb://127.0.0.1:27017/project-test')
 
 const validateResource = (req, res, next) =>{
     const { error } = resourceSchema.validate(req.body)
+    if(error){
+        throw new ExpressError(error.message,400)
+    }else{
+        next()
+    }
+}
+const validateReview = (req, res, next) =>{
+    const { error } = reviewSchema.validate(req.body)
     if(error){
         throw new ExpressError(error.message,400)
     }else{
@@ -60,9 +70,9 @@ app.post('/resources', validateResource, catchAsync(async (req, res) => {
 //show a specific resource
 app.get('/resources/:id', catchAsync(async (req, res, next) => {
     const { id }= req.params
-    const resource = await Resource.findById(id)
+    const resource = await Resource.findById(id).populate('reviews')
+    console.log(resource)
     res.render('../views/resources/show', { resource })
-
 }))
 
 //edit a specific resource
@@ -82,10 +92,30 @@ app.put('/resources/:id', validateResource, async (req, res) => {
 //Delete a specific resource
 app.delete('/resources/:id', async (req, res) => {
     const { id } = req.params;
-    // console.log(req.body.resource)
     const resource = await Resource.findByIdAndDelete(id, { ...req.body.resource });
-    res.redirect(`/resources}`)
+    res.redirect(`/resources`)
 });
+
+//create a resource review
+app.post('/resources/:id/reviews', validateReview, catchAsync(async(req, res) =>{
+    console.log('route receiving request')
+    const { id } = req.params;
+    console.log(req.body)
+    const resource = await Resource.findById(id)
+    const review = new Review(req.body.review)
+    resource.reviews.push(review)
+    await review.save();
+    await resource.save();
+    res.redirect(`/resources/${resource._id}`)
+}))
+
+//delete a review on a specific resource
+app.delete('/resources/:id/reviews/:reviewId',catchAsync(async(req, res) => {
+    const { id, reviewId} = req.params
+    await Resource.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
+    await review.findByIdAndDelete(reviewId)
+    res.redirect(`/resources/${id}`);
+}))
 
 //show all subjects
 app.get('/subjects', async(req, res) => {
