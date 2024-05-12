@@ -1,4 +1,3 @@
-const { required } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review')
@@ -28,6 +27,7 @@ const resourceSchema = new Schema({
     ],
 });
 
+//delete related reviews
 resourceSchema.post('findOneAndDelete', async function (doc) {
     console.log(doc)
     if (doc) {
@@ -37,7 +37,18 @@ resourceSchema.post('findOneAndDelete', async function (doc) {
             }
         })
     }
-})
+});
+//delete related bookmarks
+// resourceSchema.post('findOneAndDelete', async function (doc) {
+//     console.log(doc)
+//     if (doc) {
+//         await Review.deleteMany({
+//             _id: {
+//                 $in: doc.bookmarks
+//             }
+//         })
+//     }
+// })
 
 module.exports = mongoose.model('Resource', resourceSchema);
 

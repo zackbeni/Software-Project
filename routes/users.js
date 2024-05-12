@@ -33,8 +33,15 @@ router.get('/login', (req, res) => {
 
 router.post('/login', storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
     req.flash('success', 'Welcome back!');
+    console.log(res.locals.returnTo)
     const redirectUrl = res.locals.returnTo || '/resources';
     delete req.session.returnTo;
+
+    if(redirectUrl.endsWith('/reviews')){
+        const url = redirectUrl.slice(0,-8)
+        console.log('the sliced url: ', url)
+        return res.redirect(url)
+    }
     res.redirect(redirectUrl);
 })
 

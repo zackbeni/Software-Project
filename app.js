@@ -15,19 +15,9 @@ const catchAsync = require('./utils/catchAsync');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
-const { isLoggedIn, storeReturnTo } = require('./middleware')
+const { isLoggedIn, storeReturnTo, isAdmin, isReviewAuthor } = require('./middleware')
 
-const isAdmin  = async(req, res, next) =>{
-    const { id } = req.params
-    const resource = Resource.findById(id)
-    if(req.user && req.user.isAdmin){
-        next();
-    }else{
-        req.flash('error', 'You are not authorised!')
-        res.redirect(`/resources/${id}`)
-    }
 
-}
 
 //routes
 const userRoutes = require('./routes/users');
@@ -130,7 +120,13 @@ app.post('/resources', isLoggedIn, validateResource, catchAsync(async (req, res)
 //show a specific resource
 app.get('/resources/:id', catchAsync(async (req, res, next) => {
     const { id }= req.params
-    const resource = await Resource.findById(id).populate('reviews').populate('bookmarks') 
+    const resource = await Resource.findById(id).populate({
+        path: 'reviews', 
+        populate: {
+            path: 'author'
+        }
+    }).populate('bookmarks') 
+    console.log(resource)
     res.render('../views/resources/show', { resource })
 }))
 
@@ -158,10 +154,11 @@ app.delete('/resources/:id', isLoggedIn, catchAsync(async (req, res) => {
 }));
 
 //create a resource review
-app.post('/resources/:id/reviews', validateReview, catchAsync(async(req, res) =>{
+app.post('/resources/:id/reviews', isLoggedIn,  validateReview, catchAsync(async(req, res) =>{
     const { id } = req.params;
     const resource = await Resource.findById(id)
     const review = new Review(req.body.review)
+    review.author = req.user._id
     resource.reviews.push(review)
     await review.save();
     await resource.save();
@@ -170,7 +167,7 @@ app.post('/resources/:id/reviews', validateReview, catchAsync(async(req, res) =>
 }))
 
 //delete a review on a specific resource
-app.delete('/resources/:id/reviews/:reviewId',catchAsync(async(req, res) => {
+app.delete('/resources/:id/reviews/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(async(req, res) => {
     const { id, reviewId} = req.params
     await Resource.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
     await Review.findByIdAndDelete(reviewId)
