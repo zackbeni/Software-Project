@@ -12,10 +12,15 @@
                 <li class="list-group-item">Subject: <%= resource.subject%></li>
             </ul>
             <div class="card-body">
+                <% if(currentUser && currentUser.isAdmin) {%>
                 <a class="card-link btn btn-info" href="/resources/<%=resource._id%>/edit">Edit</a>
                 <form class="d-inline" action="/resources/<%=resource._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-danger">Delete</button>
                 </form>
+                <% } %>
+                <!-- <form class="d-inline" action="/resources/<%=resource._id%>?_method=DELETE" method="POST">
+                    <button class="btn btn-primary">Bookmark</button>
+                </form> -->
                 <a class="card-link btn btn-info" href="/categories/<%= resource.category%>">Back to <%= resource.category%> Category</a>
             </div>
             <div class="card-footer text-muted">
@@ -35,7 +40,7 @@
                 <label class="form-label" for="body">Review</label>
                 <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
             </div>
-            <button class="btn btn-success">Submit</button>
+            <button class="btn btn-success" name = >Submit</button>
         </form>
         <% for (let review of resource.reviews ) {%>
             <div class="card mb-3">
@@ -50,4 +55,3 @@
         <% } %>
     </div>
 </div>
-

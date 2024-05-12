@@ -5,11 +5,33 @@ const app = express();
 const { resourceSchema, reviewSchema } = require('./validationSchemas.js')
 const methodOverride = require('method-override')
 const mongoose = require('mongoose');
+const session = require('express-session')
+const flash = require('connect-flash')
 const Resource = require('./models/resource');
 const Review = require('./models/review')
+const Bookmark = require('./models/bookmark');
 const ExpressError = require('./utils/ExpressError')
 const catchAsync = require('./utils/catchAsync');
-const review = require('./models/review');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
+const { isLoggedIn, storeReturnTo } = require('./middleware')
+
+const isAdmin  = async(req, res, next) =>{
+    const { id } = req.params
+    const resource = Resource.findById(id)
+    if(req.user && req.user.isAdmin){
+        next();
+    }else{
+        req.flash('error', 'You are not authorised!')
+        res.redirect(`/resources/${id}`)
+    }
+
+}
+
+//routes
+const userRoutes = require('./routes/users');
+
 
 
 const subjects =  ['Programming Languages', 'Databases', 'Web Technologies']
@@ -23,6 +45,43 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static('public'))
+
+
+//session configuration
+const sessionConfig = {
+    secret: 'configure later',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 1000 * 60 * 60 * 24 * 7,
+        maxAage: 1000 * 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig))
+app.use(flash())
+
+// user authentication and authorisation
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
+
+
+//user routes
+app.use('/', userRoutes);
+
+
 
 mongoose.connect('mongodb://127.0.0.1:27017/project-test')
 
@@ -42,10 +101,9 @@ const validateReview = (req, res, next) =>{
         next()
     }
 }
-
-
 app.get('/', async(req, res) => {
     // res.send('Welcome to the home page!')
+    console.log(req.user)
     const resources = await Resource.find({})
     res.render('../views/resources/index', { resources })
 })
@@ -57,55 +115,57 @@ app.get('/resources',async(req, res) => {
 
     res.render('../views/resources/index', { resources })
 })
-//add a new resource
-app.get('/resources/new', (req, res) => {
+//create a new resource
+app.get('/resources/new', isLoggedIn, (req, res) => {
     res.render('resources/new', { sources, subjects, categories });
 })
-app.post('/resources', validateResource, catchAsync(async (req, res) => {
+app.post('/resources', isLoggedIn, validateResource, catchAsync(async (req, res) => {
     const resource = new Resource(req.body.resource);
     await resource.save();
+
+    req.flash('success', 'Successfully created a new resource!!')
     res.redirect(`/resources/${resource._id}`)
 }))
 
 //show a specific resource
 app.get('/resources/:id', catchAsync(async (req, res, next) => {
     const { id }= req.params
-    const resource = await Resource.findById(id).populate('reviews')
-    console.log(resource)
+    const resource = await Resource.findById(id).populate('reviews').populate('bookmarks') 
     res.render('../views/resources/show', { resource })
 }))
 
 //edit a specific resource
-app.get('/resources/:id/edit', async (req, res) =>{
+app.get('/resources/:id/edit', isLoggedIn, isAdmin, catchAsync(async (req, res) =>{
     const { id }= req.params
     const resource = await Resource.findById(id)
     res.render('../views/resources/edit', { resource, sources , subjects, categories})
-})
+}));
 
 //update a specific resource
-app.put('/resources/:id', validateResource, async (req, res) => {
+app.put('/resources/:id', isLoggedIn, validateResource, catchAsync(async (req, res) => {
     const { id } = req.params;
     const resource = await Resource.findByIdAndUpdate(id, { ...req.body.resource });
+    req.flash('success', `Successfully updated ${resource.source} Tutorial resource!!`)
     res.redirect(`/resources/${resource._id}`)
-});
+}));
 
 //Delete a specific resource
-app.delete('/resources/:id', async (req, res) => {
+app.delete('/resources/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const resource = await Resource.findByIdAndDelete(id, { ...req.body.resource });
+    req.flash('success', 'Successfully deleted the resource!!')
     res.redirect(`/resources`)
-});
+}));
 
 //create a resource review
 app.post('/resources/:id/reviews', validateReview, catchAsync(async(req, res) =>{
-    console.log('route receiving request')
     const { id } = req.params;
-    console.log(req.body)
     const resource = await Resource.findById(id)
     const review = new Review(req.body.review)
     resource.reviews.push(review)
     await review.save();
     await resource.save();
+    req.flash('success', `Successfully submitted a review for ${resource.title}!!`)
     res.redirect(`/resources/${resource._id}`)
 }))
 
@@ -113,8 +173,29 @@ app.post('/resources/:id/reviews', validateReview, catchAsync(async(req, res) =>
 app.delete('/resources/:id/reviews/:reviewId',catchAsync(async(req, res) => {
     const { id, reviewId} = req.params
     await Resource.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
-    await review.findByIdAndDelete(reviewId)
+    await Review.findByIdAndDelete(reviewId)
+    req.flash('success', `Successfully deleted the review!!`)
     res.redirect(`/resources/${id}`);
+}))
+
+//create a bookmark
+app.post('/resources/:id/bookmark/:isBookmarked', catchAsync(async(req, res) =>{
+
+    //check if already bookmarked
+    // const r - 
+    const { id, isBookmarked } = req.params;
+    const resource = await Resource.findById(id).populate('bookmarks')
+    const bookmark = new Bookmark({isBookmarked: isBookmarked})
+    resource.bookmarks.push(bookmark)
+    await bookmark.save();
+    await resource.save();
+    // req.flash('success', `Successfully submitted a review for ${resource.title}!!`)
+    // res.redirect(`/resources/${resource._id}`)
+    console.log(resource)
+    console.log(resource.bookmarks[0].isBookmarked)
+    console.log(req.params)
+
+    res.send('Bookmark received!')
 }))
 
 //show all subjects

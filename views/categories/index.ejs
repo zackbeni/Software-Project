@@ -5,9 +5,9 @@
     <ul class="list-group">
       <% for (c of categories) {%>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          <a id="<%= c %>"href="/categories/<%= c %>">
+          <a class= "labels"id="<%= c %>"href="/categories/<%= c %>">
             <%= c %>
-          </a><span> <%= counts.get(c) %></span>
+          </a><span class="data"> <%= counts.get(c) %></span>
         </li>
     </ul>
     <% } %>
@@ -22,18 +22,18 @@
 
   <script>
     const ctx = document.getElementById('myChart');
-    const a = document.querySelectorAll('a')
-    const s = document.querySelectorAll('span')
+    const a = document.querySelectorAll('.labels')
+    const s = document.querySelectorAll('.data')
     const labels = []
     const span = []
-    for (let i = 4; i <= a.length-1; i++){
+    for (let i = 0; i <= a.length-1; i++){
       console.log(a[i].innerText)
           labels.push(a[i].innerText)
     }
-    for (let i = 1; i <= s.length-1; i++){
+    for (let i = 0; i <= s.length-1; i++){
       span.push(s[i].innerText)
     }
-
+    console.log(a)
     new Chart(ctx, {
       type: 'bar',
       backgroundColor: 'red',

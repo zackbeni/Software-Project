@@ -16,9 +16,16 @@ const resourceSchema = new Schema({
     reviews: [
         {
             type: Schema.Types.ObjectId,
+            unique: true,
             ref: 'Review'
         }
-    ]
+    ],
+    bookmarks: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Bookmark'
+        }
+    ],
 });
 
 resourceSchema.post('findOneAndDelete', async function (doc) {
