@@ -23,9 +23,15 @@
                     <button class="btn btn-danger">Delete</button>
                 </form>
                 <% } %>
-                <!-- <form class="d-inline" action="/resources/<%=resource._id%>?_method=DELETE" method="POST">
-                    <button class="btn btn-primary">Bookmark</button>
-                </form> -->
+                <% if(currentUser) {%>
+                    <% if(isBookmarked) {%>
+                        <button class="btn btn-primary" id="bkmk2">Unbookmark</button>
+                        <span id="<%= bkmk[0]._id %>" class="bkmk"></span>
+                    <% }else{%>
+                        <button class="btn btn-primary" id="bkmk1">Bookmark</button>
+                    <% } %>
+
+                <% } %>
                 <a class="card-link btn btn-info" href="/categories/<%= resource.category%>">Back to <%= resource.category%> Category</a>
             </div>
             <div class="card-footer text-muted">

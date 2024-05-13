@@ -1,11 +1,11 @@
 <% layout('./layouts/boilerplate') %>
-<h1 style='text-align: center'>Welcome to <%= sub.subject  %> Subject page</h1>
+<h1 style='text-align: center; margin-bottom: 20px'>Welcome to <%= sub.subject  %> Subject page</h1>
 
 <div class="container text-center">
     <div class="row align-items-start">
 <% for (c of categories) {%>
       <div class="col">
-            <div class="card" style="width: 18rem;">
+            <div class="card mb-3" style="width: 18rem;">
                 <a href="/categories/<%= c %>"><img src="http://localhost:3000/images/<%= c %>.png" class="card-img-top" alt="..." style="height: 180px; width: 280px"></a>
                 <div class="card-body">
                 <a class="card-text" href="/categories/<%= c %>"><%= c %></a>

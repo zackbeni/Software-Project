@@ -50,7 +50,7 @@ router.get('/logout', (req, res, next) => {
         if (err) {
             return next(err);
         }
-        req.flash('success', 'Goodbye!');
+        req.flash('success', 'You have been logged out!');
         res.redirect('/resources');
     });
 }); 

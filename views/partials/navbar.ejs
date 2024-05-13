@@ -16,6 +16,10 @@
                 <% if(currentUser && currentUser.isAdmin) {%>
                 <a class="nav-link" href="/resources/new">New Resource</a>
                 <% } %>
+                <% if(currentUser) {%>
+                    <a class="nav-link" href="/bookmarks">Bookmarks</a>
+                <% } %>
+                
             </div>
             <div class="navbar-nav ml-auto">
                 <% if(!currentUser) {%>

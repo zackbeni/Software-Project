@@ -21,6 +21,8 @@ const { isLoggedIn, storeReturnTo, isAdmin, isReviewAuthor } = require('./middle
 
 //routes
 const userRoutes = require('./routes/users');
+const { match } = require('assert');
+const { type } = require('os');
 
 
 
@@ -93,7 +95,6 @@ const validateReview = (req, res, next) =>{
 }
 app.get('/', async(req, res) => {
     // res.send('Welcome to the home page!')
-    console.log(req.user)
     const resources = await Resource.find({})
     res.render('../views/resources/index', { resources })
 })
@@ -125,9 +126,22 @@ app.get('/resources/:id', catchAsync(async (req, res, next) => {
         populate: {
             path: 'author'
         }
-    }).populate('bookmarks') 
-    console.log(resource)
-    res.render('../views/resources/show', { resource })
+    }).populate({path: 'bookmarks',
+        populate: {
+            path: 'bookmarker'
+        }
+    });
+
+
+    //find the bookmark
+    const bkmk = await Bookmark.find({resource: id, bookmarker: req.user})
+    console.log(bkmk.length)
+    if(req.user && bkmk.length != 0){
+        // console.log(bkmk)
+        console.log(' I have run')
+        return res.render('../views/resources/show', { resource, bkmk, isBookmarked: true})
+    }
+    res.render('../views/resources/show', { resource, isBookmarked: false})
 }))
 
 //edit a specific resource
@@ -175,25 +189,47 @@ app.delete('/resources/:id/reviews/:reviewId', isLoggedIn, isReviewAuthor, catch
     res.redirect(`/resources/${id}`);
 }))
 
+//view all bookmarks
+app.get('/bookmarks', catchAsync(async (req, res)=> {
+    // const arr = ['663d6811d3e91886db02df22', '663d6811d3e91886db02df26']
+    const resIds = []
+    const query = await Bookmark.find({bookmarker: '6640e6b41c41bfe241701cb8'})
+    query.map((e) => {
+        resIds.push(e.resource)
+    })
+    const bookmarks = await Resource.find({_id: {$in: resIds }})
+    console.log(bookmarks)
+    res.render('../views/bookmarks/index', { bookmarks })
+}))
 //create a bookmark
-app.post('/resources/:id/bookmark/:isBookmarked', catchAsync(async(req, res) =>{
-
-    //check if already bookmarked
-    // const r - 
+app.post('/resources/:id/bookmarks', catchAsync(async(req, res) =>{
+    console.log('I am receiving requests!')
+    console.log(req.params)
     const { id, isBookmarked } = req.params;
-    const resource = await Resource.findById(id).populate('bookmarks')
-    const bookmark = new Bookmark({isBookmarked: isBookmarked})
+    const resource = await Resource.findById(id)
+    const bookmark = new Bookmark({isBookmarked: isBookmarked, resource: id})
+    bookmark.bookmarker = req.user._id
     resource.bookmarks.push(bookmark)
+    console.log(bookmark)
     await bookmark.save();
     await resource.save();
-    // req.flash('success', `Successfully submitted a review for ${resource.title}!!`)
-    // res.redirect(`/resources/${resource._id}`)
-    console.log(resource)
-    console.log(resource.bookmarks[0].isBookmarked)
-    console.log(req.params)
+    req.flash('success', `Successfully bookmarked ${resource.title}!!`)
+    res.send({isBookmarked:  bookmark._id})
+    // res.redirect(`/resources/${id}`);
 
-    res.send('Bookmark received!')
-}))
+}));
+
+//remove a bookmark
+app.delete('/resources/:id/bookmarks/:bookmarkId', catchAsync(async (req, res) => {
+    console.log('Delete bookmark route is hit!')
+    console.log(req.params)
+    const { id, bookmarkId} = req.params
+    await Resource.findByIdAndUpdate(id, {$pull: {bookmarks: bookmarkId}})
+    await Bookmark.findByIdAndDelete(bookmarkId)
+    req.flash('success', `Successfully deleted the review!!`)
+    res.redirect(`/resources/${id}`);
+
+}));
 
 //show all subjects
 app.get('/subjects', async(req, res) => {

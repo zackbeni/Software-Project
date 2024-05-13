@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review')
+const Bookmark = require('./bookmark')
 const resourceSchema = new Schema({
     source: String,
     title: {
@@ -29,6 +30,7 @@ const resourceSchema = new Schema({
 
 //delete related reviews
 resourceSchema.post('findOneAndDelete', async function (doc) {
+    console.log("DELETED!!!!")
     console.log(doc)
     if (doc) {
         await Review.deleteMany({
@@ -38,37 +40,17 @@ resourceSchema.post('findOneAndDelete', async function (doc) {
         })
     }
 });
-//delete related bookmarks
-// resourceSchema.post('findOneAndDelete', async function (doc) {
-//     console.log(doc)
-//     if (doc) {
-//         await Review.deleteMany({
-//             _id: {
-//                 $in: doc.bookmarks
-//             }
-//         })
-//     }
-// })
+// delete related bookmarks
+resourceSchema.post('findOneAndDelete', async function (doc) {
+    console.log('ALL BOOKMARKS HAVE BEEN DELETED')
+    console.log(doc)
+    if (doc) {
+        await Bookmark.deleteMany({
+            _id: {
+                $in: doc.bookmarks
+            }
+        })
+    }
+})
 
 module.exports = mongoose.model('Resource', resourceSchema);
-
-
-// const mp = new Map([
-//     ['W3Schools', 'description1'],
-//     ['TutorialsPoint', 'Description2']])
-// console.log(mp)
-
-// const bookmark = {
-//     bookmarks: {
-//         user: {
-//             userId: 1
-//         },
-//         resource:{
-//             resourceId: id
-//         }
-//     }
-// }
-//  const t = {
-//     categories:
-
-//  }
