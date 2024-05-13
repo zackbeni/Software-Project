@@ -37,7 +37,7 @@ router.post('/resources/:id/bookmarks', isLoggedIn, catchAsync(async(req, res) =
     // console.log(bookmark)
     await bookmark.save();
     await resource.save();
-    req.flash('success', `Successfully bookmarked ${resource.title}!!`)
+    // req.flash('success', `Successfully bookmarked ${resource.title}!!`)
     res.send({isBookmarked:  bookmark._id})
     // res.redirect(`/resources/${id}`);
 

@@ -95,7 +95,7 @@ router.put('/:id', isLoggedIn, validateResource, catchAsync(async (req, res) => 
 router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const resource = await Resource.findByIdAndDelete(id, { ...req.body.resource });
-    req.flash('success', 'Successfully deleted the resource!!')
-    res.redirect(`/resources`)
+    // req.flash('success', 'Successfully deleted the resource!!')
+    // res.redirect(`/resources`)
 }));
 module.exports = router
