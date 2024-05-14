@@ -1,7 +1,13 @@
 
 ```
 Software-Project
-├─ app.js
+├─ controllers
+│  ├─ bookmarks.js
+│  ├─ categories.js
+│  ├─ resources.js
+│  ├─ reviews.js
+│  └─ subjects.js
+├─ index.js
 ├─ middleware.js
 ├─ models
 │  ├─ bookmark.js
@@ -12,9 +18,6 @@ Software-Project
 ├─ package.json
 ├─ public
 │  ├─ images
-│  │  ├─ 1.jpg
-│  │  ├─ 2.jpg
-│  │  ├─ 3.jpg
 │  │  ├─ CSS.png
 │  │  ├─ GeeksForGeeks.png
 │  │  ├─ HTML.png
@@ -34,10 +37,19 @@ Software-Project
 │  │  ├─ TypeScript.png
 │  │  └─ W3Schools.png
 │  ├─ scripts
+│  │  ├─ bookmarkAjax.js
+│  │  ├─ categoriesCharts.js
+│  │  ├─ reviewAjax.js
+│  │  ├─ subjectsCharts.js
 │  │  └─ validateForms.js
 │  └─ stylesheet
 │     └─ style.css
 ├─ routes
+│  ├─ bookmarks.js
+│  ├─ categories.js
+│  ├─ resources.js
+│  ├─ reviews.js
+│  ├─ subjects.js
 │  └─ users.js
 ├─ seeds
 │  ├─ bookmarks.js
@@ -46,12 +58,13 @@ Software-Project
 │  ├─ resourcesLatest.js
 │  ├─ resourcesO.js
 │  └─ resourcesO2.js
-├─ test.js
 ├─ utils
 │  ├─ catchAsync.js
 │  └─ ExpressError.js
 ├─ validationSchemas.js
 └─ views
+   ├─ bookmarks
+   │  └─ index.ejs
    ├─ categories
    │  ├─ index.ejs
    │  └─ show.ejs

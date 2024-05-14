@@ -54,3 +54,12 @@ resourceSchema.post('findOneAndDelete', async function (doc) {
 })
 
 module.exports = mongoose.model('Resource', resourceSchema);
+module.exports.subjects = [
+    'Programming Languages', 'Databases', 'Web Technologies']
+module.exports.categories = [
+    'JavaScript', 'Python', 'TypeScript', 'PHP', 'Java', 'React'
+    , 'HTML', 'CSS', 'MongoDB', 'MySQL', 'PostgreSQL'
+]
+module.exports.sources = [
+    'W3Schools', 'TutorialsPoint', 'GeeksForGeeks', 'MDN'
+]
