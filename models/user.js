@@ -12,6 +12,3 @@ const userSchema = new Schema({
 });
 userSchema.plugin(passportLocalMongoose);
 module.exports = mongoose.model('User', userSchema);
-
-// db.users.findOneAndUpdate({_id: ObjectId('66400033d7d77499beb7689d')}, {$set: {isAdmin: true}})
-// db.users.updateMany({$ne: {isAdmin: true}}, {$set: {isAdmin: false}})

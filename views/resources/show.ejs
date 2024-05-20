@@ -1,19 +1,18 @@
 <% layout('layouts/boilerplate')%>
 <div class="row">
-    <!-- <% if(!currentUser) {%>  
-    <div class="col-6 offset-3">
-    <% }else{ %> -->
-
-    <!-- <% } %> -->
+    <% if(!currentUser && resource.reviews.length == 0) {%>
+    <div class="col-12">
+    <% }else{ %>
     <div class="col-6">
-        <div class="card mb-3">
-            <img src="<%= resource.image%>" class="card-img-top" alt="..." style="width: 30%;  display: block; margin-left: auto; margin-right: auto;">
+    <% } %>
+        <div class="card mb-3 resource-body">
+            <img src="/images/<%= resource.source%>.png" class="card-img-top" alt="..." style="width: 30%;  display: block; margin-left: auto; margin-right: auto;">
             <div class="card-body">
                 <h5 class="card-title"><%= resource.title%></h5>
                 <p class="card-text"><%= resource.description%></p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item text-muted">Category: <%= resource.category%></li>
+                <li class="list-group-item">Category: <%= resource.category%></li>
                 <li class="list-group-item">Subject: <%= resource.subject%></li>
                 <% if(bookmarksCount) {%>
                 <li class="list-group-item">Bookmarked by <%= bookmarksCount%> Users</li>
@@ -37,7 +36,7 @@
                 <% } %>
                 <a class="card-link btn btn-info" href="/categories/<%= resource.category%>">Back to <%= resource.category%> Category</a>
             </div>
-            <div class="card-footer text-muted">
+            <div class="card-footer ">
                 <a href="<%= resource.url%>" target="_blank">Click to visit resoure website</a>
             </div>
         </div>        
@@ -58,31 +57,36 @@
             <button class="btn btn-success" name = >Submit</button>
         </form>
         <% } %>
-        <% for (let review of resource.reviews ) {%>
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 id="reviewRating" class="card-title">Rating: <%= review.rating %></h5>
-                    <div id ="<%= review.author.username %>-Div" class="mb-3" hidden>
-                        <label class="form-label" for="rating">Rating</label>
-                        <input class="form-range" type="range" min="1" max="5" name="updateRating" id="<%= review.author.username %>-Rating">
-                    </div>
-                    <h5 class="card-title mb-2 text-muted">By <%= review.author.username %></h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Sentiment Analysis Score: <%= review.score %></h6>
-                    <textarea id = "<%= review.author.username %>" disabled class="card-text" cols="80" rows="auto " ><%= review.body %></textarea>
-                    <% if(currentUser && review.author.equals(currentUser._id)) {%>
-                    <div>
-                        <button id="editReview" class="btn btn-primary">Edit</button>
-                        <button hidden id="updateReview" class="btn btn-success">Save</button>
-                        <span id="reviewId" hidden><%= review._id %></span>
-                        <span id="currentUser" hidden><%= review.author.username %></span>
-                        <form class="d-inline" action="/resources/<%=resource._id%>/reviews/<%= review._id %>?_method=DELETE" method="POST">
-                            <button class="btn btn-danger">Delete</button>
-                        </form>
-                    </div>
-                    <% } %>
-                </div>
-            </div>
+        <% if(resource.reviews.length > 1) {%>
+        <div class="reviews-container-scroll">
         <% } %>
+            <% for (let review of resource.reviews ) {%>
+                <div class="card mb-3 review-item">
+                    <div class="card-body">
+                        <h5 id="reviewRating" class="card-title">Rating: <%= review.rating %></h5>
+                        <div id ="<%= review.author.username %>-Div" class="mb-3" hidden>
+                            <label class="form-label" for="rating">Rating</label>
+                            <input class="form-range" type="range" min="1" max="5" name="updateRating" id="<%= review.author.username %>-Rating">
+                        </div>
+                        <h5 class="card-title mb-2">By <%= review.author.username %></h5>
+                        <h6 class="card-subtitle mb-2">Sentiment Analysis Score: <%= review.score %></h6>
+                        <textarea class="review-text-area" id = "<%= review.author.username %>" disabled class="card-text"  rows="auto " ><%= review.body %></textarea>
+                        <% if(currentUser && review.author.equals(currentUser._id)) {%>
+                            <div>
+                                <button id="editReview" class="btn btn-primary">Edit</button>
+                                <button hidden id="updateReview" class="btn btn-success">Save</button>
+                                <span id="reviewId" hidden><%= review._id %></span>
+                                <span id="currentUser" hidden><%= review.author.username %></span>
+                                <form class="d-inline" action="/resources/<%=resource._id%>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                            <% } %>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+
     </div>
 
 </div>

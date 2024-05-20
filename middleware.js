@@ -1,18 +1,18 @@
 const Resource = require('./models/resource');
 const Review = require('./models/review')
 
-
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.url
         req.flash('error', 'You must be signed in first!');
+        console.log(req._parsedOriginalUrl.path)
         return res.redirect('/login');
     }
     next();
 };
 module.exports.storeReturnTo = (req, res, next) => {
     if (req.session.returnTo) {
-        // console.log('from return to', req)
+        console.log('from return to', req.seession.returnTo)
         res.locals.returnTo = req.session.returnTo;
     }
     next();
@@ -24,7 +24,7 @@ module.exports.isAdmin  = async(req, res, next) =>{
         next();
     }else{
         req.flash('error', 'You are not authorised!')
-        res.redirect(`/resources/${id}`)
+        res.redirect(`/resources`)
     }
 
 };

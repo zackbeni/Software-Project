@@ -1,5 +1,5 @@
 //Subjects Charts
-const ctx = document.getElementById('myChart');
+const ctx = document.getElementById('myChart1');
 const a = document.querySelectorAll('.labels')
 const s = document.querySelectorAll('.data')
 console.log('hello', a, s)
@@ -21,7 +21,8 @@ new Chart(ctx, {
     labels: [...labels],
     datasets: [{
       label: 'Number of Resources under each Subject',
-      backgroundColor: 'rgb(52, 112, 209)',
+      backgroundColor: 'rgb(48, 200, 235)',
+      color: 'rgb(52, 112, 209)',
       data: [...span],
       borderWidth: 1
     }]

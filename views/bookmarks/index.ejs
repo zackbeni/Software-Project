@@ -1,14 +1,24 @@
 <% layout('./layouts/boilerplate') %>
 <h1 style="text-align: center">Welcome to All your bookmarks page</h1>
 <% for (let b of bookmarks) {%>
-    <div class="col-12 offset-3">
-        <div class="card mb-5" style="width: auto; max-width: 40em; height: auto">
-            <h2>
-                <a href="/resources/<%= b._id %>"><%= b.title %></a>   
-            </h2>
-            <div class="'card-body">
-                <%= b.description %>
-            </div class="'card-body">
+
+    <div class="resource-row">
+        <h2>
+            <a href="/resources/<%= b._id %>"><%= b.title %></a>  
+        </h2>
+        <div>
+            <table cellspacing="10">
+                <tr>
+                    <td>
+                        <img src="/images/<%= b.category%>.png" alt="image" style="height: 18em">
+                    </td>
+                    <td>
+                        <p>
+                            <%= b.description %>
+                        </p>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
     <% } %>

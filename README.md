@@ -39,10 +39,12 @@ Software-Project
 │  ├─ scripts
 │  │  ├─ bookmarkAjax.js
 │  │  ├─ categoriesCharts.js
+│  │  ├─ resources.js
 │  │  ├─ reviewAjax.js
 │  │  ├─ subjectsCharts.js
 │  │  └─ validateForms.js
 │  └─ stylesheet
+│     ├─ resources.css
 │     └─ style.css
 ├─ routes
 │  ├─ bookmarks.js
@@ -52,12 +54,8 @@ Software-Project
 │  ├─ subjects.js
 │  └─ users.js
 ├─ seeds
-│  ├─ bookmarks.js
 │  ├─ index.js
-│  ├─ resources.js
-│  ├─ resourcesLatest.js
-│  ├─ resourcesO.js
-│  └─ resourcesO2.js
+│  └─ resources.js
 ├─ utils
 │  ├─ catchAsync.js
 │  └─ ExpressError.js
@@ -69,6 +67,7 @@ Software-Project
    │  ├─ index.ejs
    │  └─ show.ejs
    ├─ error.ejs
+   ├─ home.ejs
    ├─ layouts
    │  └─ boilerplate.ejs
    ├─ partials

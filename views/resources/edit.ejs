@@ -24,11 +24,6 @@
                     value="<%=resource.url %>">
             </div>
             <div class="mb-3">
-                <label class="form-label" for="image">Image Url</label>
-                <input class="form-control" type="text" id="image" name="resource[image]"
-                    value="<%=resource.image %>" required>
-            </div>
-            <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control" type="text" id="description"
                     name="resource[description]" required><%= resource.description%></textarea>
@@ -65,7 +60,6 @@
 </div>
 
 <script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
 (() => {
     'use strict'
   

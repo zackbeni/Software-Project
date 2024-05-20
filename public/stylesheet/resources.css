@@ -1,0 +1,93 @@
+.reviews-container-scroll {
+    height: fit-content;
+    max-height: 330px;
+    margin: 0;
+    padding: 1%;
+    padding-left: 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.reviews-container-scroll > div {
+    display: block;
+    float: none;
+}
+
+textarea {
+    color: rgba(251, 251, 251, 0.8) !important;
+    background-color: rgba(123, 123, 123, 0.6) !important;
+}
+
+.review-text-area {
+    color: rgb(251, 251, 251);
+    width: 100%;
+    padding: 5px;
+}
+
+.review-text-area:disabled {
+    background-color: rgba(123, 123, 123, 0.8);
+}
+.resource-body {
+    max-height: 100%;
+    border: none;
+}
+
+.resource-body,
+    .resource-body ul li {
+    background-color: rgb(53, 53, 53);
+}
+
+.resource-body img {
+    background-color: rgb(255, 255, 255);
+    margin: 10px;
+}
+
+.review-item {
+    /* border: none; */
+    border: 1px solid rgb(147, 147, 147);
+    background-color: rgb(20, 19, 19);
+    color: rgb(251, 251, 251);
+}
+
+.resource-row div {
+    padding: 10px;
+    padding-bottom: 30px;
+}
+
+.resource-row div img {
+    background-color: rgb(255, 255, 255);
+    max-width: 100%;
+}
+
+.resource-row div table {
+    padding: 20px 0px 10px;
+}
+
+.resource-row div table tr td:first-child {
+    width: 300px;
+    padding-right: 20px;
+}
+
+.resource-row div p {
+    text-align: justify;
+}
+
+#myChart1,#myChart2 {
+    background-color: rgba(255, 255, 255, 0.97);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.card-links ul li {
+    background-color: rgba(123, 123, 123, 0.6) !important;
+}
+.card-links ul li a {
+    color: rgb(251, 251, 251);
+    font-style: bold;
+}
+.card-links ul li a:hover {
+    color: rgb(48, 200, 235);
+}

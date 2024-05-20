@@ -1,4 +1,3 @@
-// ***************************** Bookmarking Ajax JavaScript Code***************************************
 console.log('BOOKMARKS AJAX CODE RUNNING')
 const bkmk1 = document.querySelector('#bkmk1');
 const bkmk2 = document.querySelector('#bkmk2');

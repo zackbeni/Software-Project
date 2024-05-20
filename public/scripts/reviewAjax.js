@@ -1,4 +1,3 @@
-//// ***************************** Editing Reviews AJAX JavaScript Code***************************************
 console.log('REVIEWS AJAX CODE RUNNING')
     const currentUser = document.querySelector('#currentUser').innerText
     const reviewId = document.querySelector('#reviewId').innerText

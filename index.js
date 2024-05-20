@@ -29,8 +29,6 @@ const subjectRoutes = require('./routes/subjects.js')
 const categoryRoutes = require('./routes/categories.js')
 const bookmarksRoutes = require('./routes/bookmarks.js');
 
-
-
 //Views and Engines
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
@@ -39,7 +37,6 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static('public'))
-
 
 //Session configuration
 const sessionConfig = {
@@ -63,9 +60,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-
-
-
 //Defining locals
 app.use((req, res, next) => {
     res.locals.currentUser = req.user
@@ -87,7 +81,7 @@ app.use('/', bookmarksRoutes);
 app.get('/', async(req, res) => {
     // res.send('Welcome to the home page!')
     const resources = await Resource.find({})
-    res.render('../views/resources/index', { resources })
+    res.render('../views/home', { resources })
 })
 
 app.all('*', (req, res, next) =>{
@@ -101,6 +95,6 @@ app.use((err, req, res, next) => {
     res.render('../views/error', { err })
 })
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000')
+app.listen(4000, () => {
+    console.log('Listening on port 4000 now')
 })
